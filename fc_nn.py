@@ -25,7 +25,7 @@ class FCmodel(Model):
         self.flatten = Flatten()
         #Creating layers
         self.d1 = Dense(4000, activation=tf.nn.relu)
-        self.d2 = Dense(57, activation=tf.nn.softmax)
+        self.d2 = Dense(2, activation=tf.nn.softmax) #57
 
         # TODO set up architecture, for example:
         #self.d1 = Dense(<num hidden units>, <activation function>)
