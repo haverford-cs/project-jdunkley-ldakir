@@ -1,80 +1,78 @@
 """
-Fully connected neural network architecture.
-Author:
+Starter code for NN training and testing.
+Source: Stanford CS231n course materials, modified by Sara Mathieson
+Authors:
 Date:
 """
 
+import matplotlib.pyplot as plt
 import numpy as np
+import os
 import tensorflow as tf
 
-from tensorflow.keras.layers import Dense, Flatten, Conv2D
-from tensorflow.keras import Model
+from tensorflow.python.keras import backend as K
+from tensorflow.python.keras.datasets.cifar import load_batch
 
-##################
+from fc_nn import *
+from util import *
 
-class FCmodel(Model):
+def load_spambase(num_training=3451, num_validation=1000, num_test=1150):
+    #3451 1150
     """
-    A fully-connected neural network; the architecture is:
-    fully-connected (dense) layer -> ReLU -> fully connected layer.
-    Note that we only need to define the forward pass here; TensorFlow will take
-    care of computing the gradients for us.
+    Fetch the spambase dataset from the web and perform preprocessing to prepare
+    it for the two-layer neural net classifier.
     """
-    def __init__(self):
-        super(FCmodel, self).__init__()
-        #Flattening
-        self.flatten = Flatten()
-        #Creating layers
-        self.d1 = Dense(4000, activation=tf.nn.relu)
-        self.d2 = Dense(2, activation=tf.nn.softmax) #57
+    train_data, test_data = load_data('spambase/spambase.data')
+    train_data = np.asarray(train_data, dtype=np.float32)
+    test_data = np.asarray(test_data, dtype=np.float32)
+    X_train = train_data[:,:-1]
+    y_train = train_data[:,-1]
+    X_test = test_data[:,:-1]
+    y_test = test_data[:,-1]
 
-        # TODO set up architecture, for example:
-        #self.d1 = Dense(<num hidden units>, <activation function>)
-        # use 4000 units in the hidden layer, num classes is 10
-    #x is the mini-batch of pixels ?? (64,32,32,3)
-    def call(self, x):
+    # Subsample the data for validation
+    mask = range(num_validation)
+    X_val = X_train[mask]
+    y_val = y_train[mask]
 
-        # TODO apply each layer from the constructor to x, returning
-        # the output of the last layer
-        x1 = self.flatten(x)
-        #return self.flatten
-        x2 = self.d1(x1)
-        return self.d2(x2)
-
-def two_layer_fc_test():
-    """Test function to make sure the dimensions are working"""
-
-    # Create an instance of the model
-    fc_model = FCmodel()
-
-    # TODO try out both the options below (all zeros and random)
-    # shape is: number of examples (mini-batch size), width, height, depth
-    #x_np = np.zeros((64, 32, 32, 3))
-    x_np = np.random.rand(64, 32, 32, 3)
-
-    # call the model on this input and print the result
-    output = fc_model.call(x_np)
-    print("output! ", output) # TODO what shape is this? does it make sense?
-    #shape=(64, 32, 32, 10)
-
-    """
-    shape=(64, 10), dtype=float32)
-    Variable: dense/kernel:0
-    Shape: (3072, 4000)
-    Variable: dense/bias:0
-    Shape: (4000,)
-    Variable: dense_1/kernel:0
-    Shape: (4000, 10)
-    Variable: dense_1/bias:0
-    Shape: (10,)
-    """
-    # TODO look at the model parameter shapes, do they make sense?
-    for v in fc_model.trainable_variables:
-        print("Variable:", v.name)
-        print("Shape:", v.shape)
+    return X_train, y_train, X_val, y_val, X_test, y_test
 
 def main():
-    # test two layer function
-    two_layer_fc_test()
+    X_train, y_train, X_val, y_val, X_test, y_test = load_spambase()
+    print('Train data shape: ', X_train.shape)              #(3451, 57)
+    print('Train labels shape: ', y_train.shape)            #(3451,)
+    print('Validation data shape: ', X_val.shape)           #(1000, 57)
+    print('Validation labels shape: ', y_val.shape)         #(1000,)
+    print('Test data shape: ', X_test.shape)                # (1150, 57)
+    print('Test labels shape: ', y_test.shape)              # (1150,)
 
-if __name__ == "__main__":
-    main()
+
+    buffer = X_train.shape[0]
+
+    #prepare train and test dset for tensorflow functions
+    train_dset = tf.data.Dataset.from_tensor_slices((X_train,y_train)).shuffle(buffer).batch(64)
+    test_dset = tf.data.Dataset.from_tensor_slices((X_test, y_test)).batch(64)
+
+    #setting up the architecture
+    model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(57,)),
+    tf.keras.layers.Dense(100, activation='relu'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(2, activation='softmax')
+    ])
+    #adding optimizers and loss functions
+    model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+    #training the model
+    model.fit(X_train, y_train, epochs=10)
+    #testing the model
+    test_loss, test_acc = model.evaluate(X_test,  y_test, verbose=2)
+    print('\nTest accuracy:', test_acc)
+    #making the confusion matrix
+    predictions = tf.argmax(model.predict(X_test), axis=1, output_type=tf.int32)
+    print("confusion matrix", tf.math.confusion_matrix(y_test, predictions))
+
+
+main()
