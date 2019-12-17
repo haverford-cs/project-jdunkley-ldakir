@@ -1,6 +1,7 @@
 """
-Authors:
-Date: 12/04/19
+Authors: Lamiaa Dakir and Jocelyn Dunkley
+Date: 12/17/2019
+Description: Util file to load data as features and labels.
 """
 
 # python imports

@@ -1,7 +1,7 @@
 """
 Authors: Lamiaa Dakir
-Date:
-Description:
+Date: 12/17/2019
+Description: Detecting Spam using Decision Trees.
 """
 
 import numpy as np
