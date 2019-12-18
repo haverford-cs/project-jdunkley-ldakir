@@ -1,4 +1,4 @@
-# project-jdunkley-ldakir
+# Jocelyn Dunkley & Lamiaa Dakir
 
 # Is It A Spam ?
 Our final project aims to evaluate which algorithm would be the most accurate to determine if an email is spam or not. We implemented Decision Trees, Random Forests, AdaBoost, Naive Bayes and Fully Connected Neural Networks. It turned out that Random Forests and AdaBoost had the best/comparable accuracies but AdaBoost correctly predicted a real spam email while Random Forests classifed it as not spam. 
@@ -33,10 +33,14 @@ We use the AdaBoostClassifier and RandomForestClassifier in the sklearn.ensemble
     clf.fit(train_data.X, train_data.y)
     score = clf.score(test_data.X,test_data.y)
     
-    
+# Naive Bayes
+We use GaussianNB in the sklearn.naive_bayes python package. GuassianNB handles continuous features and can be used in this case because the features are independent.
 
-
+    clf = GaussianNB()
+    clf.fit(train_data.X, train_data.y)
     
+Naive Bayes is very strict because the false negative value in the confusion matrix is very high. It is more likely to classify an email as a spam.
+
   
    
     
