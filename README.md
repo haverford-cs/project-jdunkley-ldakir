@@ -7,9 +7,9 @@ Our final project aims to evaluate which algorithm would be the most accurate to
 1. Spambase dataset
 2. Our original project proposal
 3. Our presentation slides to demonstrate our results. We gave the presentation on December 12th.
-4. The implementation our different algorithms: Decision Trees, AdaBoost, Random Forests, Naive Bayes and Neural Networks
+4. The implementations of our different algorithms: Decision Trees, AdaBoost, Random Forests, Naive Bayes and Fully Connected Neural Network
 5. spamFilter.py: testing our algorithms on two different emails - one spam (antispamSpam.txt), one not-spam (saraEmail.txt) - to test if it could correct classify spam from non-spam.
-6. Two util files to preprocess our data. One is for the Neural Networks and the other is for the rest of the algorithms, since the process was slightly different.
+6. Two util files to preprocess our data. One is for the Fully Connected Neural Network and the other is for the rest of the algorithms, since the process was slightly different.
 7. run_data.py: To test if loading/preprocessing the data is working.
 
 # Lab Notebook
@@ -19,7 +19,7 @@ Our Lab Notebook/Log is in a Google doc that can be accessed here: https://docs.
 
 Link to the dataset: https://archive.ics.uci.edu/ml/datasets/spambase.
 
-The data has 57 continuous features and one label. It has 4601 examples, 1813 of which are spam and 2788 are non-spam, which is an approximate 60% non-spam/40% spam split. During preprocessing, we split the data into 75% training data and 25% testing data. We then separated the features from the labels and made sure we did not look at the testing data labels. To ensure the training data and testing data was not biased we randomly chose points from the dataset, since the dataset was organized in a way where all the points with label = 1 were listed and then all the points with label = 0.
+The data has 57 continuous features and one label. It has 4601 examples, 1813 of which are spam and 2788 are non-spam, which is an approximate 60% non-spam/40% spam split. During preprocessing, we split the data into 75% training data and 25% testing data. We then separated the features from the labels and made sure we did not look at the testing data labels. To ensure the training data and testing data was not biased we chose points from the dataset at random, since the dataset was organized in a way where all the points with label = 1 were listed and then all the points with label = 0.
 
 # Decision Trees
 Using the DecisionTreeClassifier in the sklearn.tree python package, we fitted the training data and evaluated the performance of the decision tree model.
@@ -54,9 +54,9 @@ We used GaussianNB in the sklearn.naive_bayes python package. GuassianNB handles
 Naive Bayes was very strict because the false negative value in the confusion matrix was very high. It is more likely to classify an email as a spam.
 
 # Fully Connected Neural Network
-We used the tf.keras API in Tensorflow to easily build our Fully Connected Neural Network. The first layer Flattens and takes an initial size of 57, since that is the number of features. Then there is a Dense layer with 100 hidden nodes using ReLU. Note: I learned that you want to have the number of hidden nodes usually be a little more than half the number of your examples, I was originally using 4000, which was way too high and complicated for my model. Then I used Batch Normalization and a Dropout of 0.2 then an output Dense layer with size 2 (since there are two labels) using softmax. We added an adam optimizer, sparse_categorical_crossentropy loss function and an accuracy metric.
+We used the tf.keras API in Tensorflow to build our Fully Connected Neural Network. The first layer Flattens and takes an initial size of 57, the number of features in the data. Then there is a Dense layer with 100 hidden nodes using ReLU. Then I used Batch Normalization and a Dropout of 0.2 then an output Dense layer with size 2 (since there are two labels) using softmax. We added an adam optimizer, sparse_categorical_crossentropy loss function and an accuracy metric.
 
-Using Batch Normalization and Dropout helped to make the accuracies pretty consistent around 90-92% on testing data.
+Using Batch Normalization and Dropout helped to make the accuracies pretty consistent - around 90-92% on testing data.
 
     model = tf.keras.Sequential([
     tf.keras.layers.Flatten(input_shape=(57,)),
