@@ -1,4 +1,5 @@
 """
+Pre-processing the data for the FC NN
 Authors: Jocelyn Dunkley and Lamiaa Dakir
 Date: 12/04/19
 """

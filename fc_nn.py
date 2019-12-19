@@ -1,20 +1,16 @@
 """
-Starter code for NN training and testing.
+Loading and building FC NN model for the spambase dataset
 Source: Stanford CS231n course materials, modified by Sara Mathieson
-Authors:
-Date:
+Authors: Jocelyn Dunkley
+Date: 12/11/19
 """
 
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 import tensorflow as tf
 
 from tensorflow.python.keras import backend as K
-from tensorflow.python.keras.datasets.cifar import load_batch
-
-from fc_nn import *
-from util import *
+from util_fc_nn import *
 
 def load_spambase(num_training=3451, num_validation=1000, num_test=1150):
     #3451 1150
