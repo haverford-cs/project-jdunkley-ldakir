@@ -3,7 +3,7 @@
 # Is It A Spam ?
 Our final project aims to evaluate which algorithm would be the most accurate to determine if an email is spam or not. We implemented Decision Trees, Random Forests, AdaBoost, Naive Bayes and Fully Connected Neural Networks. It turned out that Random Forests and AdaBoost had the best/comparable accuracies but AdaBoost correctly predicted a real spam email while Random Forests classified it as not spam.
 
-#Contents of the Repo:
+# Contents of the Repo:
 1. Spambase dataset
 2. Our original project proposal
 3. Our presentation slides to demonstrate our results. We gave the presentation on December 12th.
@@ -12,7 +12,7 @@ Our final project aims to evaluate which algorithm would be the most accurate to
 6. Two util files to preprocess our data. One is for the Neural Networks and the other is for the rest of the algorithms, since the process was slightly different.
 7. run_data.py: To test if loading/preprocessing the data is working.
 
-#Lab Notebook
+# Lab Notebook
 Our Lab Notebook/Log is in a Google doc that can be accessed here: https://docs.google.com/document/d/1bO7JDyPeJD8Q4W5iTv7HU_1woeriWaAzBNPrrJdDe-E/edit?usp=sharing
 
 # Data Pre-processing
@@ -53,7 +53,7 @@ We used GaussianNB in the sklearn.naive_bayes python package. GuassianNB handles
 
 Naive Bayes was very strict because the false negative value in the confusion matrix was very high. It is more likely to classify an email as a spam.
 
-#Fully Connected Neural Network
+# Fully Connected Neural Network
 We used the tf.keras API in Tensorflow to easily build our Fully Connected Neural Network. The first layer Flattens and takes an initial size of 57, since that is the number of features. Then there is a Dense layer with 100 hidden nodes using ReLU. Note: I learned that you want to have the number of hidden nodes usually be a little more than half the number of your examples, I was originally using 4000, which was way too high and complicated for my model. Then I used Batch Normalization and a Dropout of 0.2 then an output Dense layer with size 2 (since there are two labels) using softmax. We added an adam optimizer, sparse_categorical_crossentropy loss function and an accuracy metric.
 
 Using Batch Normalization and Dropout helped to make the accuracies pretty consistent around 90-92% on testing data.
